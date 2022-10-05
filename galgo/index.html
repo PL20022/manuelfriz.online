@@ -80,35 +80,51 @@
 <img class="img-fluid" src="assets/img/branca.webp" style="margin-top:-5px">
 <br>
 <br>
-<head>
-    <script src="https://player.pandavideo.com.br/api.v2.js"></script>
-  	<style>.esconder{display:none;}</style>
-</head>
 
-<div style="position:relative;padding-top:56.25%;"><iframe id="panda-32b0711f-8751-472b-b4a3-5badd4af2c72" src="https://player-vz-1f45a567-6fa.tv.pandavideo.com.br/embed/?v=32b0711f-8751-472b-b4a3-5badd4af2c72" style="border:none;position:absolute;top:0;left:0;" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen=true width="100%" height="100%"></iframe></div>
+<div id="vid_633de8283da239000a8f262d" style="position:relative;width:100%;padding: 56.25% 0 0;"><img id="thumb_633de8283da239000a8f262d" src="https://images.converteai.net/c123190a-9458-49b8-a705-eb88c4404ac9/players/633de8283da239000a8f262d/thumbnail.jpg" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;"><div id="backdrop_633de8283da239000a8f262d" style="position:absolute;top:0;width:100%;height:100%;-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);"></div></div><script type="text/javascript" id="scr_633de8283da239000a8f262d">var s=document.createElement("script");s.src="https://scripts.converteai.net/c123190a-9458-49b8-a705-eb88c4404ac9/players/633de8283da239000a8f262d/player.js",s.async=!0,document.head.appendChild(s);</script>
+<script type="text/javascript">
+            document.addEventListener("DOMContentLoaded", function() {
+            /* ALTERE O VALOR 10 PARA OS SEGUNDOS EM QUE AS SEÇÕES VÃO APARECER */
+            var SECONDS_TO_DISPLAY = 885;
+            var CLASS_TO_DISPLAY = ".esconder";
 
-<script>
-const DELAY_TIME_IN_SECONDS = 885;
-const DELAY_ELEMENTS_CLASS = 'esconder';
+            /* DAQUI PARA BAIXO NAO PRECISA ALTERAR */
+            var attempts = 0;
+            var elsHiddenList = [];
+            var elsDisplayed = false;
+            var elsHidden = document.querySelectorAll(CLASS_TO_DISPLAY);
+            var alreadyDisplayedKey =`alreadyElsDisplayed${SECONDS_TO_DISPLAY}`
+            var alreadyElsDisplayed = localStorage.getItem(alreadyDisplayedKey);
 
-function showElements(className, value) {
-    for (const element of document.getElementsByClassName(className)) {
-        element.style.display = value;
-    }
-}
+            setTimeout(function () { elsHiddenList = Array.prototype.slice.call(elsHidden); }, 0);
 
-window.onload = () => {
-    showElements(DELAY_ELEMENTS_CLASS, 'none');
-    window.addEventListener("message", function(event) {
-      const data = event.data;
-      if (data.message == 'panda_timeupdate') {
-        if (data.currentTime >= DELAY_TIME_IN_SECONDS) {
-          showElements(DELAY_ELEMENTS_CLASS, 'block');
-        }
-      }
-    });
-}
-</script>
+            var showHiddenElements = function () {
+            elsDisplayed = true;
+            elsHiddenList.forEach((e) => e.style.display = "block");
+            localStorage.setItem(alreadyDisplayedKey, true)
+            }
+
+            var startWatchVideoProgress = function () {
+            if (typeof smartplayer === 'undefined' || !(smartplayer.instances && smartplayer.instances.length)) {
+            if (attempts >= 10) return;
+            attempts += 1;
+            return setTimeout(function () { startWatchVideoProgress() }, 1000);
+            }
+
+            smartplayer.instances[0].on('timeupdate', () => {
+            if (elsDisplayed || smartplayer.instances[0].smartAutoPlay) return;
+            if (smartplayer.instances[0].video.currentTime < SECONDS_TO_DISPLAY) return;
+            showHiddenElements();
+            })
+            }
+
+            if (alreadyElsDisplayed === 'true') {
+            setTimeout(function () { showHiddenElements(); }, 100);
+            } else {
+            startWatchVideoProgress()
+            }
+            });
+            </script>
 <div class="quadro" style="margin-top: 10px;color: #f5e051;">
 <b>👁 <span id="number"></span> PESSOAS ESTÃO ASSISTINDO A ESSE VÍDEO AGORA...</b>
 <script>
