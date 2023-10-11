@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tecnologia Lupus</title>
     <style>
@@ -48,6 +49,8 @@
             left: 0;
             width: 100%;
             height: 100%;
+
+            border-radius: 15px; /* Cantos arredondados */
         }
         .info {
             padding: 10px;
@@ -91,6 +94,13 @@
         .right-arrow {
             right: -40px;
         }
+          .arrow:hover {
+            background-color: rgba(255, 102, 0, 0.9); /* Laranja mais escuro ao passar o mouse */
+        }
+        .arrow:active {
+            transform: translateY(-50%) scale(0.95); /* Efeito de pressionar ao clicar */
+        }
+
         .bottom-menu {
             display: flex;
             justify-content: space-around;
@@ -120,12 +130,13 @@
             font-size: 50px;
             color: gold;
             display: none;
-            animation: rewardAnimation 1s forwards;
+            animation: rewardAnimation 1.5s forwards;
+            text-shadow: 2px 2px 4px #000000;
         }
         @keyframes rewardAnimation {
-            0% { opacity: 0; transform: translate(-50%, -60%); }
-            50% { opacity: 1; }
-            100% { opacity: 0; transform: translate(-50%, -40%); }
+            0% { opacity: 0; transform: translate(-50%, -60%); font-size: 30px; }
+            50% { opacity: 1; font-size: 60px; }
+            100% { opacity: 0; transform: translate(-50%, -40%); font-size: 30px; }
         }
          .notification {
             position: fixed;
@@ -146,6 +157,20 @@
             vertical-align: middle;
             margin-right: 5px;
         }
+
+         .dislike-button {
+        background-color: #ff0000; /* Vermelho */
+        color: #fff;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: transform 0.2s;
+    }
+    .dislike-button:active {
+        transform: scale(1.1);
+    }
     </style>
 </head>
 <body>
@@ -158,37 +183,41 @@
     <div class="container">
         <div class="arrow left-arrow">&#9664;</div>
         <div class="video">
-            <iframe id="videoFrame" src="https://www.youtube.com/embed/VIDEO_ID_1" frameborder="0" allowfullscreen></iframe>
-        </div>
+            <video id="videoFrame" controls width="100%">
+    <source src="C:\Users\Patick\Downloads\Snaptik.app_7288014336100994309.mp4" type="video/mp4">
+    Seu navegador não suporta o elemento de vídeo.
+</video>       </div>
         <div class="info">
             <div class="username">@username</div>
             <div class="description">Descrição do vídeo aqui...</div>
             <button class="like-button" onclick="showReward()">Curtir</button>
+            <button class="dislike-button" onclick="subtractReward()">Não Recomendo</button>
         </div>
         <div class="arrow right-arrow">&#9654;</div>
     </div>
-    <div class="reward">💰 +100</div>
+    <div class="reward">R$17,00</div>
     <div class="bottom-menu">
         <div class="menu-item">
-            <div class="menu-icon">🏠</div>
+             <div class="menu-icon"><i class="fas fa-home"></i></div>
             Início
         </div>
         <div class="menu-item">
-            <div class="menu-icon">🔍</div>
+            <div class="menu-icon"><i class="fas fa-search"></i></div>
             Descobrir
         </div>
-        <div class="menu-item">
-            <div class="menu-icon">➕</div>
+        <div class="menu-item" onclick="showPixNotification()">
+            <div class="menu-icon"><i class="fas fa-plus"></i></div>
             Adicionar
         </div>
         <div class="menu-item">
-            <div class="menu-icon">💌</div>
+            <div class="menu-icon"><i class="fas fa-envelope"></i></div>
             Mensagens
         </div>
         <div class="menu-item">
-            <div class="menu-icon">👤</div>
+            <div class="menu-icon"><i class="fas fa-user"></i></div>
             Perfil
         </div>
+    </div>
     </div>
     <!-- Notificação -->
      <div class="notification" id="pixNotification">
@@ -197,6 +226,25 @@
     </div>
     <audio id="moneySound" src="URL_DO_SEU_SOM_DE_DINHEIRO.mp3"></audio>
     <script>
+  const videoFrame = document.getElementById('videoFrame');
+        const videoURLs = [
+             'Snaptik.app_7284650089983823109-5.mp4',
+    'Snaptik.app_7288451324725792005-4.mp4',
+    // ... adicione mais caminhos de vídeo conforme necessário ...
+];
+let currentVideoIndex = 0;
+
+document.querySelector('.left-arrow').addEventListener('click', function() {
+    currentVideoIndex = (currentVideoIndex - 1 + videoURLs.length) % videoURLs.length;
+    videoFrame.src = videoURLs[currentVideoIndex];
+    videoFrame.play(); // Inicia a reprodução do vídeo
+});
+
+document.querySelector('.right-arrow').addEventListener('click', function() {
+    currentVideoIndex = (currentVideoIndex + 1) % videoURLs.length;
+    videoFrame.src = videoURLs[currentVideoIndex];
+    videoFrame.play(); // Inicia a reprodução do vídeo
+});
         let walletAmount = 0;
 
         function showReward() {
@@ -227,6 +275,20 @@
         // Adicionando o evento de clique ao botão "Perfil"
         const profileButton = document.querySelector('.menu-item:last-child');
         profileButton.addEventListener('click', showPixNotification);
+
+          function subtractReward() {
+        const rewardElement = document.querySelector('.reward');
+        rewardElement.style.display = 'block';
+        rewardElement.textContent = 'R$ +17,00';
+
+        // Subtraindo do saldo na "carteira"
+        walletAmount += 17;
+        document.getElementById('walletAmount').textContent = walletAmount;
+
+        setTimeout(() => {
+            rewardElement.style.display = 'none';
+        }, 1000);
+    }
     </script>
 </body>
 </html>
